@@ -1,0 +1,69 @@
+class TrieNode
+{
+	char val;
+	HashMap<Character, TrieNode> children;
+	boolean isEnd;
+	public TrieNode(char val)
+	{
+		this.val = val;
+		children = new HashMap<Character, TrieNode>();
+		isEnd = false;
+	}
+}
+class Trie                  
+{
+	TrieNode root;
+	public Trie()
+	{
+		root = new TrieNode((char)0);
+	}
+	public void insert(String input)
+	{
+		TrieNode crawl = root;
+		char temp;
+		for(int i=0; i<input.length(); i++)
+		{
+			temp = input.charAt(i);
+			HashMap<Character, TrieNode> children = crawl.children;
+			if(children.containsKey(temp))
+			{
+				crawl = children.get(temp);
+			}
+			else
+			{
+				TrieNode node = new TrieNode(temp);
+				children.put(temp, node);
+				crawl = node;
+			}
+		}
+		crawl.isEnd = true;
+	}
+	public String longestPrefixMatch(String word)           //O(n) where n is the length of the string
+	{
+		TrieNode crawl = root;
+		String result = "";
+		char temp;
+		int lastMatchIndex = 0;
+		HashMap<Character, TrieNode> children;
+		for(int i=0; i<word.length(); i++)
+		{
+			children = crawl.children;
+			temp = word.charAt(i);
+			if(children.containsKey(temp))
+			{
+				result += temp;
+				crawl = children.get(temp);
+				if(crawl.isEnd)
+				{
+					lastMatchIndex = i;
+				}
+			}
+			else
+				break;
+		}
+		if(crawl.isEnd)
+			return result;
+		else
+			return result.substring(0, lastMatchIndex+1);
+	}
+}
